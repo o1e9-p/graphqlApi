@@ -2,14 +2,14 @@ GraphQl API
 
 Апи для получение и изменения дерева организационной структуры компании
 
-type Employee {
-  id: Int
-  personalNumber: Int
-  name: String
-  surname: String
-  avatar: String
-  positions: [Int]
-}
+  type Employee {
+    id: Int
+    personalNumber: Int
+    name: String
+    surname: String
+    avatar: String
+    positions: [Int]
+  }
 
 type Role {
   id: Int
