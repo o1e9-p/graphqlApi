@@ -97,17 +97,7 @@ function getResolvers(connection) {
                 return role;
             },
 
-            addEmployee: async (root, data) => {
-                const employee = await employeesRepository.save(new Employee(data));
-
-                if (employee.positions.length) {
-                    const roles = await rolesRepository.find({ id: In(employee.positions) });
-                    roles.forEach(role => role.updateEmployeeID(employee.id));
-                    rolesRepository.save(roles);
-                }
-
-                return employee
-            },
+            addEmployee: async (root, data) => await employeesRepository.save(new Employee(data)),
 
             updateEmployee: async (root, { personalNumber, ...data }) => {
                 const employee = await employeesRepository.findOne({ personalNumber });

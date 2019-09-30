@@ -15,8 +15,8 @@ const { employee: fakeEmployeeRepo, role: fakeRoleRepo } = repositories;
 let newRoleTestExpectation;
 
 describe('Mutation', async () => {
-    await addRolesTest();
     await addEmployeesTest();
+    await addRolesTest();
     await deleteRoleTest();
     await addNewRole();
     await deleteEmployee();
@@ -26,38 +26,35 @@ describe('Mutation', async () => {
 });
 
 
-function addRolesTest() {
+async function addRolesTest() {
+    const {testData, testExpectation } = rolesData;
+
+    for (const role of testData){
+        await Mutation.addRole({}, role)
+    }
     return new Promise(resolve => {
         describe('addRole', () => {
-            const {testData, testExpectation } = rolesData;
 
-            for (const role of testData){
-                Mutation.addRole({}, role)
-            }
-
-            it('should create 6 correct roles', () => {
-                expect(fakeRoleRepo.fakeDb).to.deep.equal(testExpectation);
-                resolve()
+            it('should return roles object with EmployeeID field', () => {
+                expect(fakeRoleRepo.fakeDb).to.deep.equal(rolesDataWithEmployeeId);
+                resolve();
             });
         });
     })
 
 }
 
-async function addEmployeesTest() {
+function addEmployeesTest() {
     const { testData, testExpectation } = employeesData;
 
     for (const employee of testData){
-        await Mutation.addEmployee({}, employee)
+        Mutation.addEmployee({}, employee)
     }
     return new Promise(resolve => {
         describe('addEmployee', () => {
             it('should create 5 correct employees', () => {
                 expect(fakeEmployeeRepo.fakeDb).to.deep.equal(testExpectation);
-            });
-            it('should return roles object with EmployeeID field', () => {
-                expect(fakeRoleRepo.fakeDb).to.deep.equal(rolesDataWithEmployeeId);
-                resolve();
+                resolve()
             });
 
         });
@@ -93,13 +90,13 @@ async function addNewRole() {
     newRoleTestExpectation = JSON.parse(JSON.stringify(deleteRoleTestExpectation));
 
     newRoleTestExpectation[7] = {
-        "chief": 1,
-        "department": "C",
-        "employeeID": null,
-        "id": 7,
-        "job_open": true,
-        "role": "C1*",
-        subordinates: [],
+        'chief': 1,
+        'department': 'C',
+        'employeeID': null,
+        'id': 7,
+        'job_open': true,
+        'role': 'C1*',
+        'subordinates': [],
     };
 
     newRoleTestExpectation[1].subordinates = [2, 5, 6, 7];
@@ -127,8 +124,8 @@ async function deleteEmployee() {
         employeeID: null,
         role: 'C2',
         department: 'C',
-        subordinates: [],
         chief: 1,
+        subordinates: [],
     };
 
     await Mutation.deleteEmployee({}, { personalNumber: 123414 });
@@ -149,46 +146,17 @@ async function deleteEmployee() {
 async function addNewEmployee() {
     const employee = {
         personalNumber: 123422,
-        positions: [7, 5],
         name: 'Sema*',
         surname: 'Semin*',
         avatar: 'https://avatarStorage.com/2',
     };
-
-    const rolesExpected = [
-        {
-            'chief': 1,
-            'department': 'C',
-            'employeeID': 6,
-            'id': 5,
-            'job_open': false,
-            'role': 'C2',
-            'subordinates': [],
-        },
-        {
-            'chief': 1,
-            'department': 'C',
-            'employeeID': 6,
-            'id': 7,
-            'job_open': false,
-            'role': 'C1*',
-            'subordinates': [],
-        },
-    ];
 
     await Mutation.addEmployee({}, employee);
 
     return new Promise(resolve => {
         describe('addEmployee', () => {
             it('should add correct employee', () => {
-                expect(fakeEmployeeRepo.fakeDb[6]).deep.equal({ id: 6, ...employee });
-            });
-            it('should correct change role (id: 5) employeeID', () => {
-                expect(fakeRoleRepo.fakeDb[5]).deep.equal(rolesExpected[0]);
-            });
-            it('should correct change role (id: 7) employeeID', () => {
-                expect(fakeRoleRepo.fakeDb[7]).deep.equal(rolesExpected[1]);
-                resolve();
+                expect(fakeEmployeeRepo.fakeDb[6]).deep.equal({ id: 6, ...employee, positions: [] });
             });
         });
     });
@@ -234,9 +202,7 @@ async function updateRole() {
         'id': 6,
         'name': 'Sema*',
         'personalNumber': 123422,
-        'positions': [
-            7,
-        ],
+        'positions': [],
         'surname': 'Semin*',
     };
 

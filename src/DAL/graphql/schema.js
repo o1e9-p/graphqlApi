@@ -51,7 +51,6 @@ const typeDefs = gql`
       name: String!,
       surname: String!,
       personalNumber: Int!,
-      positions: [Int]!,
       avatar: String
     ): Employee
     
@@ -59,7 +58,6 @@ const typeDefs = gql`
       personalNumber: Int!,
       name: String,
       surname: String,
-      positions: [Int],
       avatar: String
     ): Employee
     
