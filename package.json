@@ -13,7 +13,7 @@
     "eslint": "^6.4.0",
     "eslint-plugin-deprecate": "^0.5.4",
     "graphql": "^14.5.4",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "nodemon": "^1.19.2",
     "pg": "^7.12.1",
     "typeorm": "^0.2.19"
